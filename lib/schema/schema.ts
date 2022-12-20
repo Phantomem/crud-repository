@@ -1,12 +1,8 @@
-import Ajv, { JSONSchemaType } from "ajv";
-import { DBValidationError } from "./error";
+import Ajv from "ajv";
+import { DBValidationError } from "../error";
+import { DBSchemaType, ValidatorFunction } from "./schema.types";
 const ajv = new Ajv();
 
-export type DBSchemaType<T> = {
-  uniques: string[]
-} & JSONSchemaType<T>;
-
-export type ValidatorFunction<T> = (data: T | Partial<T>) => void;
 
 const validate = <T>(schema: DBSchemaType<T>, skipRequired: boolean): ValidatorFunction<T> => {
   return (data: T | Partial<T>): void => {

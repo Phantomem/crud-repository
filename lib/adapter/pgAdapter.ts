@@ -1,5 +1,5 @@
 import { knex } from "knex";
-import { DbAdapter } from "./type";
+import { DbAdapter } from "./types";
 
 export function pgAdapter<T>(schema: any): DbAdapter<T> {
   const pool = knex({

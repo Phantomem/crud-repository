@@ -1,28 +1,9 @@
-import { DbAdapter } from './adapter/type';
-import { DBUniqueKeyError } from './error';
-import { curry } from "./lib/curry";
-import { DBSchemaType, createValidator, updateValidator, ValidatorFunction } from './schema';
-
-type MethodParams<T> = { 
-  dbAdapter: DbAdapter<T>,
-  schema: DBSchemaType<T>,
-  validateCreate: ValidatorFunction<T>,
-  validateUpdate: ValidatorFunction<T>,
-}
-
-type Create<T> = (data: Omit<T, 'id'>) => Promise<T | undefined>
-type Update<T> = ({ where, data }: { where: Partial<T>, data: Partial<T> }) => Promise<T[] | undefined>
-type GetOne<T> = (id: string) => Promise<T | undefined>
-type GetMany<T> = (filters: Partial<T>) => Promise<T[] | undefined>
-type RemoveOne<T> = (id: string) => Promise<T | undefined>
-type Repository<T> = {
-  create: Create<T>,
-  update: Update<T>,
-  getOne: GetOne<T>,
-  getMany: GetMany<T>,
-  removeOne: RemoveOne<T>,
-  custom: () => any,
-}
+import { DbAdapter } from '../adapter/adapter.types';
+import { DBUniqueKeyError } from '../error';
+import { curry } from '../helper/curry';
+import { createValidator, updateValidator } from '../schema';
+import { DBSchemaType } from '../schema.types';
+import { Repository } from './builder.types';
 
 const validateUniques = async <T>(dbAdapter: DbAdapter<T>, uniques: Partial<T>[]): Promise<void> => {
   const uniquesFound = (await Promise.all(uniques.map((unique) => dbAdapter.getOne(unique))))
