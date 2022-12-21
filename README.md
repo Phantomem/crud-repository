@@ -51,7 +51,7 @@ const userSchema: DBSchemaType<User> = {
   uniques: ['email'],
 };
 
-const dbAdapter = mysqlAdapter(knex({
+const dbAdapter = sqlAdapter(knex({
   client: 'pg',
   connection: process.env.CONNECTION_STRING,
 }))
