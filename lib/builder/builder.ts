@@ -1,9 +1,9 @@
-import { DbAdapter } from '../adapter/adapter.types';
+import { DBAdapterFunction, DbAdapter } from '../adapter/adapter.types';
 import { DBUniqueKeyError } from '../error';
 import { curry } from '../helper/curry';
 import { createValidator, updateValidator } from '../schema/schema';
 import { DBSchemaType } from '../schema/schema.types';
-import { Repository, MethodParams } from './builder.types';
+import { Repository, MethodParams, FilterParam } from './builder.types';
 
 const validateUniques = async <T>(dbAdapter: DbAdapter<T>, uniques: Partial<T>[]): Promise<void> => {
   const uniquesFound = (await Promise.all(uniques.map((unique) => dbAdapter.getOne(unique))))
@@ -16,7 +16,7 @@ const validateUniques = async <T>(dbAdapter: DbAdapter<T>, uniques: Partial<T>[]
   if (uniquesFound.length) {
     throw new DBUniqueKeyError(uniquesFound);
   }
-}
+};
 
 const create = async <T>({ dbAdapter, schema, validateCreate }: MethodParams<T>,  data: Omit<T, 'id'> & Record<string, unknown>): Promise<T> => {
   validateCreate(data as T);
@@ -36,7 +36,7 @@ const getOne = async <T>({ dbAdapter }: MethodParams<T>, where: Partial<T>): Pro
   return dbAdapter.getOne(where);
 };
 
-const getMany = <T>({ dbAdapter }: MethodParams<T>, filters: Partial<T>): Promise<T[]> => {
+const getMany = <T>({ dbAdapter }: MethodParams<T>, filters: FilterParam[]): Promise<T[]> => {
   return dbAdapter.getMany(filters);
 };
 
@@ -46,11 +46,11 @@ const removeOne = async <T>({ dbAdapter }: MethodParams<T>, where: Partial<T>): 
   }
 
   return dbAdapter.removeOne(where);
-}
+};
 
 const custom = <T>(dbAdapter: DbAdapter<T>) => (): any => {
   return dbAdapter.custom();
-}
+};
 
 async function query<T>(methodParams: MethodParams<T>, method: Function, param: any) {
   try {
@@ -61,8 +61,8 @@ async function query<T>(methodParams: MethodParams<T>, method: Function, param: 
   }
 }
 
-export function repository<T>(dbAdapter: { <T>(schema: any): DbAdapter<T> }, entitySchema: DBSchemaType<T>): Repository<T> {
-  const adapter = dbAdapter<T>(entitySchema);
+export function repository<T>(dbAdapter: DBAdapterFunction<T>, entitySchema: DBSchemaType<T>): Repository<T> {
+  const adapter = dbAdapter(entitySchema);
   const validateCreate = createValidator(entitySchema);
   const validateUpdate = updateValidator(entitySchema);
 

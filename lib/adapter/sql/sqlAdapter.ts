@@ -1,6 +1,7 @@
 import { Knex } from 'knex';
-import { DBSchemaType } from '../schema';
-import { DBAdapterFunction, DbAdapter } from './adapter.types';
+import { DBSchemaType } from '../../schema';
+import { DBAdapterFunction, DbAdapter, FilterType } from '../adapter.types';
+import { buildWhereByFilters } from './sqlFilterBuilder';
 
 export function mysqlAdapter<T>(pool: Knex): DBAdapterFunction<T> {
   return (schema: DBSchemaType<T>): DbAdapter<T> => {
@@ -16,8 +17,9 @@ export function mysqlAdapter<T>(pool: Knex): DBAdapterFunction<T> {
       getOne: async (where) => {
         return await qb().where(where).first();
       },
-      getMany: async (filters) => {
-        return await qb().where(filters);
+      getMany: async (filters: FilterType) => {
+        const queryBuilder = buildWhereByFilters(qb(), filters);
+        return await queryBuilder.groupBy('id');
       },
       removeOne: async (where) => {
         return await qb().where(where).delete().returning('*').first();
