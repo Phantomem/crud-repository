@@ -19,7 +19,7 @@ export function sqlAdapter<T>(pool: Knex): DBAdapterFunction<T> {
       },
       getMany: async (filters: FilterType) => {
         const queryBuilder = buildWhereByFilters(qb(), filters);
-        return await queryBuilder.groupBy('id');
+        return await queryBuilder.returning('*');
       },
       removeOne: async (where) => {
         return await qb().where(where).delete().returning('*').first();
