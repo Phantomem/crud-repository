@@ -2,19 +2,19 @@ import { DBSchemaType } from '../schema';
 
 export type FilterOperatorMultiple = 'and' | 'or' | 'not';
 export type FilterOperatorSingle = 'single';
-export type FilterArrayFilterType = [FilterSingleType, ...FilterType[]];
+export type FilterArrayFilterType = FilterType[];
 export type FilterSingleFilterType = {
   key: string,
   filter: string,
   value: any,
 };
 export type FilterMultipleType = {
-  operator: FilterOperatorMultiple,
-  flow: FilterArrayFilterType,
+  readonly operator: FilterOperatorMultiple,
+  readonly flow: FilterArrayFilterType,
 };
 export type FilterSingleType = {
-  operator: FilterOperatorSingle,
-  flow: FilterSingleFilterType,
+  readonly operator: FilterOperatorSingle,
+  readonly flow: FilterSingleFilterType,
 };
 export type FilterType = FilterMultipleType | FilterSingleType;
 export type DBAdapterFunction<T> = (schema: DBSchemaType<T>) => DbAdapter<T>;

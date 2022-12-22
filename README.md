@@ -5,6 +5,9 @@ Crud-repository is an abstract object that can handle CRUD default methods like 
 
 ## Usage <a name = "usage"></a>
 
+ 
+Basic usage:
+
 ```ts
 
 interface User {
@@ -60,11 +63,39 @@ const userRepository = repository(dbAdapter, userSchema);
 
 userRepository.create({
   email: 'email@email.com',
-  password: 'SomePassword123',
+  password: 'hashed_password',
   firstName: 'John',
   lastName: 'Smith',
   createdAt: new Date().toString(),
   updatedAt: new Date().toString(),
 }).then().catch();
 
+```
+
+Filters:
+
+```ts
+// single filter:
+async function getEverySmith() {
+  return userRepository.getMany(FilterBuilder.single('lastName' '=', 'Smith'));
+}
+
+// multiple filters: 
+async function getEveryJohnSmith() {
+  return userRepository.getMany(FilterBuilder.and((builder) => {
+    builder.single('lastName' '=', 'Smith').single('firstName' '=', 'John')
+  }))
+}
+
+async function getEveryJohnSmithOrJamesBlack() {
+  return userRepository.getMany(FilterBuilder.or((or) => {
+    or
+      .and((and1) => {
+        and1.single('lastName' '=', 'Smith').single('firstName', '=', 'John')
+      })
+      .and((and2) => {
+        and2.single('lastName' '=', 'James').single('firstName', '=', 'Black')
+      })
+  }))
+}
 ```

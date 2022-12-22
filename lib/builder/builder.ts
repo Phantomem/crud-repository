@@ -1,9 +1,9 @@
-import { DBAdapterFunction, DbAdapter } from '../adapter/adapter.types';
+import { DBAdapterFunction, DbAdapter, FilterType } from '../adapter/adapter.types';
 import { DBUniqueKeyError } from '../error';
 import { curry } from '../helper/curry';
 import { createValidator, updateValidator } from '../schema/schema';
 import { DBSchemaType } from '../schema/schema.types';
-import { Repository, MethodParams, FilterParam } from './builder.types';
+import { Repository, MethodParams } from './builder.types';
 
 const validateUniques = async <T>(dbAdapter: DbAdapter<T>, uniques: Partial<T>[]): Promise<void> => {
   const uniquesFound = (await Promise.all(uniques.map((unique) => dbAdapter.getOne(unique))))
@@ -36,7 +36,7 @@ const getOne = async <T>({ dbAdapter }: MethodParams<T>, where: Partial<T>): Pro
   return dbAdapter.getOne(where);
 };
 
-const getMany = <T>({ dbAdapter }: MethodParams<T>, filters: FilterParam[]): Promise<T[]> => {
+const getMany = <T>({ dbAdapter }: MethodParams<T>, filters: FilterType): Promise<T[]> => {
   return dbAdapter.getMany(filters);
 };
 
