@@ -1,6 +1,6 @@
-import Ajv from "ajv";
-import { DBValidationError } from "../error";
-import { DBSchemaType, ValidatorFunction } from "./schema.types";
+import Ajv from 'ajv';
+import { DBValidationError } from '../error';
+import { DBSchemaType, ValidatorFunction } from './schema.types';
 const ajv = new Ajv();
 
 

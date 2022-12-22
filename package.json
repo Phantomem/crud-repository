@@ -10,11 +10,11 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^18.11.15",
+    "knex": "^2.3.0",
     "typescript": "^4.9.4"
   },
   "dependencies": {
     "ajv": "^7.2.4",
-    "knex": "^2.3.0",
     "pg": "^8.8.0"
   }
 }

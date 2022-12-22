@@ -1,4 +1,4 @@
-import { ErrorObject } from "ajv";
+import { ErrorObject } from 'ajv';
 
 export class DBUniqueKeyError extends Error {
   private readonly context: any;
