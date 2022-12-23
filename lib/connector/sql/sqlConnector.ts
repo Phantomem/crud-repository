@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
 import { DBSchemaType } from '../../schema';
-import { DBAdapterFunction, DbAdapter, FilterType } from '../adapter.types';
+import { DBAdapterFunction, DbAdapter, FilterType } from '../connector.types';
 import { buildWhereByFilters } from './sqlFilterBuilder';
 
 export function sqlAdapter<T>(pool: Knex): DBAdapterFunction<T> {

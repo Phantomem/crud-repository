@@ -1,6 +1,7 @@
 import { DBSchemaType } from '../schema';
 
-export type FilterOperatorMultiple = 'and' | 'or' | 'not';
+export type FilterMarkType = '>=' | '<=' | '>' | '<' | '=' | 'ilike' | '!=' | 'in';
+export type FilterOperatorMultiple = 'and' | 'or';
 export type FilterOperatorSingle = 'single';
 export type FilterArrayFilterType = FilterType[];
 export type FilterSingleFilterType = {
@@ -26,17 +27,3 @@ export type DbAdapter<T> = {
   removeOne: (where: Partial<T>) => Promise<T>,
   custom: () => any
 };
-
-const filter: FilterType = {
-  operator: 'and',
-  flow: [
-    {
-      operator: 'single',
-      flow: {
-        key: '',
-        filter: '',
-        value: '',
-      }
-    },
-  ],
-}

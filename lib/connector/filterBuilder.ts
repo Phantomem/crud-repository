@@ -1,12 +1,13 @@
 import { 
   FilterArrayFilterType,
+  FilterMarkType,
   FilterMultipleType,
   FilterOperatorMultiple,
   FilterOperatorSingle,
   FilterSingleFilterType,
   FilterSingleType,
   FilterType
-} from './adapter.types';
+} from './connector.types';
 
 class SingleFilter implements FilterSingleType {
   readonly flow: FilterSingleFilterType;
@@ -15,7 +16,7 @@ class SingleFilter implements FilterSingleType {
   constructor(flow: FilterSingleFilterType,) {
     this.flow = flow;
   }
-  
+
   public build(): FilterSingleType {
     return { flow: this.flow, operator: this.operator };
   }
@@ -46,7 +47,7 @@ export class FilterBuilder {
     return new FilterBuilder(new MultipleFilter([], operator).build());
   }
 
-  public static single(key: string, filter: string, value: any): FilterBuilder {
+  public static single(key: string, filter: FilterMarkType, value: any): FilterBuilder {
     return new FilterBuilder(new SingleFilter({ key, filter, value }).build());
   }
 
@@ -58,7 +59,7 @@ export class FilterBuilder {
     return cb(FilterBuilder.multiple('or'));
   }
 
-  public single(key: string, filter: string, value: any): FilterBuilder {
+  public single(key: string, filter: FilterMarkType, value: any): FilterBuilder {
     if (this.filters.flow instanceof Array) {
       this.filters.flow.push(FilterBuilder.single(key, filter, value).build() as never);
     }

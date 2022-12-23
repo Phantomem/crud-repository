@@ -1,5 +1,5 @@
 import { Knex } from "knex";
-import { FilterMultipleType, FilterOperatorMultiple, FilterOperatorSingle, FilterSingleFilterType, FilterType } from "../adapter.types";
+import { FilterMultipleType, FilterOperatorMultiple, FilterOperatorSingle, FilterSingleFilterType, FilterType } from "../connector.types";
 
 export const assignOperation = (
   qb: Knex.QueryBuilder,
@@ -13,34 +13,47 @@ export const assignOperation = (
     case 'or':
       qb.orWhere(key, filter, value);
       break;
-    case 'not':
-      qb.whereNot(key, filter, value);
-      break;
     default:
       qb.where(key, filter, value);
       break;
   };
 };
 
+export const assignMultipleOperation = (
+  qb: Knex.QueryBuilder,
+  operator: FilterOperatorMultiple,
+  cb: (arg: Knex.QueryBuilder) => Knex.QueryBuilder,
+): void => {
+  switch (operator) {
+    case 'and':
+      qb.andWhere(cb);
+      break;
+    case 'or':
+      qb.orWhere(cb);
+      break;
+    default:
+      break;
+  }
+}
+
 export const buildMultipleFilter = (
   qb: Knex.QueryBuilder,
   filters: FilterMultipleType,
 ): Knex.QueryBuilder => {
-  filters.flow.forEach((filterGroup: FilterType) => {
+  const operator: FilterOperatorMultiple = filters.operator;
+
+  filters.flow.forEach((filterGroup: FilterType, i: number) => {
+    const isFirst = i === 0;
     if (filterGroup.operator === 'single') {
-      const { key, filter, value } = filterGroup.flow;
-      assignOperation(
-        qb,
-        { key, filter, value },
-        filterGroup.operator,
-      );
+      isFirst
+        ? assignOperation(qb, filterGroup.flow, 'single') 
+        : assignOperation(qb, filterGroup.flow, operator);
     } else {
-      qb.andWhere((builder) => {
-        buildMultipleFilter(
-          builder,
-          filterGroup,
-        );
-      });
+      assignMultipleOperation(
+        qb,
+        operator,
+        (a) => buildMultipleFilter(a, filterGroup),
+      );
     }
   });
 

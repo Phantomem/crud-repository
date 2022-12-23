@@ -1,4 +1,4 @@
-import { DbAdapter, FilterType } from '../adapter/adapter.types';
+import { DbAdapter, FilterType } from '../connector/connector.types';
 import { DBSchemaType, ValidatorFunction } from '../schema/schema.types';
 
 export type MethodParams<T> = {
