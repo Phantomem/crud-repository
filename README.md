@@ -88,14 +88,15 @@ async function getEveryJohnSmith() {
 }
 
 async function getEveryJohnSmithOrJamesBlack() {
-  return userRepository.getMany(FilterBuilder.or((or) => {
-    or
-      .and((and1) => {
-        and1.single('lastName' '=', 'Smith').single('firstName', '=', 'John')
-      })
-      .and((and2) => {
-        and2.single('lastName' '=', 'James').single('firstName', '=', 'Black')
-      })
-  }))
+  return userRepository.getMany(FilterBuilder.or((or) => 
+        or
+          .and((and1) => 
+            and1.single('lastName', '=', 'Smith').single('firstName', '=', 'John')
+          )
+          .and((and2) => 
+            and2.single('lastName', '=', 'James').single('firstName', '=', 'Black')
+          )
+      )
+  )
 }
 ```

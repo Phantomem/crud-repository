@@ -1,4 +1,4 @@
-import { DBAdapterFunction, DbAdapter, FilterType } from '../adapter/adapter.types';
+import { DBAdapterFunction, DbAdapter, FilterType } from '../connector/connector.types';
 import { DBUniqueKeyError } from '../error';
 import { curry } from '../helper/curry';
 import { createValidator, updateValidator } from '../schema/schema';
