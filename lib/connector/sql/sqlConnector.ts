@@ -3,7 +3,7 @@ import { DBSchemaType } from '../../schema';
 import { DBAdapterFunction, DbAdapter, FilterType } from '../connector.types';
 import { buildWhereByFilters } from './sqlFilterBuilder';
 
-export function sqlAdapter<T>(pool: Knex): DBAdapterFunction<T> {
+export function sqlConnectorr<T>(pool: Knex): DBAdapterFunction<T> {
   return (schema: DBSchemaType<T>): DbAdapter<T> => {
     const qb = () => pool(schema.table);
 
